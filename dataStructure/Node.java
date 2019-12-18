@@ -1,6 +1,6 @@
 package dataStructure;
 
-import java.util.Hashtable;
+import java.util.HashMap;
 
 import utils.Point3D;
 
@@ -10,15 +10,14 @@ public class Node implements node_data {
 	private double weight;
 	private String info;
 	private int tag;
-	private Hashtable<Integer , edge_data> edges;
+	private HashMap<Integer , edge_data> edges;
 
-	public Node(int key, Point3D location, double weight, String info, int tag) {
+	public Node(int key, Point3D location, double weight, int tag) {
 		this.key = key;
 		this.location = location;
 		this.weight = weight;
-		this.info = info;
 		this.tag = tag;
-		this.edges = new Hashtable<Integer , edge_data>();
+		this.edges = new HashMap<Integer , edge_data>();
 	}
 	
 	@Override
@@ -68,11 +67,11 @@ public class Node implements node_data {
 		this.tag = t;
 	}
 
-	public Hashtable<Integer , edge_data> getEdges() {
+	public HashMap<Integer , edge_data> getEdges() {
 		return this.edges;
 	}
 
-	public void setEdges(Hashtable<Integer , edge_data> edges) {
+	public void setEdges(HashMap<Integer , edge_data> edges) {
 		this.edges = edges;
 	}
 	
