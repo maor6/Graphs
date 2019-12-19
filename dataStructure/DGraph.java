@@ -26,24 +26,29 @@ public class DGraph implements graph {
 
 	@Override
 	public void addNode(node_data n) {
-		this.nodes.put(n.getKey(), (Node) n);
+		this.nodes.put(n.getKey(),n);
 		MC++;
 	}
 
 	@Override
 	public void connect(int src, int dest, double w) {
 		Edge e = new Edge(src, dest, w);
-		this.edges.get(src).put(dest, e);
+		//this.edges.get(src).put(dest, e); //this is by gofna
+		if(this.edges.get(src) == null) { // add a new hash if there isnt one to the same key 
+			this.edges.put(src, new HashMap<Integer, edge_data>()); //as the node the key is (src)s
+
+		}
+		this.edges.get(src).put(dest, e); // add the edge to the hash by key (the key is dest)
 		MC++;
 	}
 
 	@Override
-	public Collection<node_data> getV() { // need to fix
+	public Collection<node_data> getV() {
 		return this.nodes.values();
 	}
 
 	@Override
-	public Collection<edge_data> getE(int node_id) { // need to fix
+	public Collection<edge_data> getE(int node_id) { //???is key?
 		return this.edges.get(node_id).values();
 
 	}
@@ -57,7 +62,7 @@ public class DGraph implements graph {
 				this.edges.get(n.getKey()).remove(key);
 			}
 		}
-		if (this.nodes.get(key) != null) {
+		if (this.nodes.get(key) != null) { //ask if there is such node
 			this.edges.remove(key);
 			this.nodes.remove(key);
 			MC++;

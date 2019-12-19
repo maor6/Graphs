@@ -1,23 +1,18 @@
 package dataStructure;
 
-import java.util.HashMap;
-
 import utils.Point3D;
 
 public class Node implements node_data {
 	private int key;
 	private Point3D location;
 	private double weight;
-	private String info;
-	private int tag;
-	private HashMap<Integer , edge_data> edges;
+	private String info; //from where we came from at the little cost
+	private int tag; //the minimum cost we have reach at the current node
 
-	public Node(int key, Point3D location, double weight, int tag) {
+	public Node(int key, Point3D location, double weight) {
 		this.key = key;
 		this.location = location;
 		this.weight = weight;
-		this.tag = tag;
-		this.edges = new HashMap<Integer , edge_data>();
 	}
 	
 	@Override
@@ -67,13 +62,13 @@ public class Node implements node_data {
 		this.tag = t;
 	}
 
-	public HashMap<Integer , edge_data> getEdges() {
-		return this.edges;
-	}
+//	public HashMap<Integer , edge_data> getEdges() {
+//		return this.edges;
+//	}
 
-	public void setEdges(HashMap<Integer , edge_data> edges) {
-		this.edges = edges;
-	}
+//	public void setEdges(HashMap<Integer , edge_data> edges) {
+//		this.edges = edges;
+//	}
 	
 
 }
