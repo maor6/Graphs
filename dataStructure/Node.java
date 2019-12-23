@@ -8,11 +8,15 @@ public class Node implements node_data {
 	private double weight;
 	private String info; //from where we came from at the little cost
 	private int tag; //the minimum cost we have reach at the current node
+	private boolean visited;
+	
 
-	public Node(int key, Point3D location, double weight) {
+	public Node(int key, Point3D location) {
 		this.key = key;
 		this.location = location;
-		this.weight = weight;
+		this.weight = Double.POSITIVE_INFINITY;
+		this.tag = -1;
+		this.setVisited(false);
 	}
 	
 	@Override
@@ -62,13 +66,14 @@ public class Node implements node_data {
 		this.tag = t;
 	}
 
-//	public HashMap<Integer , edge_data> getEdges() {
-//		return this.edges;
-//	}
+	public boolean isVisited() {
+		return visited;
+	}
 
-//	public void setEdges(HashMap<Integer , edge_data> edges) {
-//		this.edges = edges;
-//	}
+	public void setVisited(boolean visited) {
+		this.visited = visited;
+	}
+
 	
 
 }
