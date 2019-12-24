@@ -1,10 +1,11 @@
 package dataStructure;
+
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
-public class DGraph implements graph{
+public class DGraph implements graph {
 	private HashMap<Integer, node_data> nodes = new HashMap<Integer, node_data>();
 	private HashMap<Integer, HashMap<Integer, edge_data>> edges = new HashMap<Integer, HashMap<Integer, edge_data>>();
 	private static int MC = 0;
@@ -26,16 +27,16 @@ public class DGraph implements graph{
 
 	@Override
 	public void addNode(node_data n) {
-		this.nodes.put(n.getKey(),n);
+		this.nodes.put(n.getKey(), n);
 		MC++;
 	}
 
 	@Override
 	public void connect(int src, int dest, double w) {
 		Edge e = new Edge(src, dest, w);
-		//this.edges.get(src).put(dest, e); //this is by gofna
-		if(this.edges.get(src) == null) { // add a new hash if there isnt one to the same key 
-			this.edges.put(src, new HashMap<Integer, edge_data>()); //as the node the key is (src)s
+		// this.edges.get(src).put(dest, e); //this is by gofna
+		if (this.edges.get(src) == null) { // add a new hash if there isnt one to the same key
+			this.edges.put(src, new HashMap<Integer, edge_data>()); // as the node the key is (src)s
 
 		}
 		this.edges.get(src).put(dest, e); // add the edge to the hash by key (the key is dest)
@@ -48,9 +49,11 @@ public class DGraph implements graph{
 	}
 
 	@Override
-	public Collection<edge_data> getE(int node_id) { //???is key?
-		return this.edges.get(node_id).values();
-
+	public Collection<edge_data> getE(int node_id) { // ???is key?
+		if (this.edges.containsKey(node_id)) {
+			return this.edges.get(node_id).values();
+		}
+		return null;
 	}
 
 	@Override
@@ -62,7 +65,7 @@ public class DGraph implements graph{
 				this.edges.get(n.getKey()).remove(key);
 			}
 		}
-		if (this.nodes.get(key) != null) { //ask if there is such node
+		if (this.nodes.get(key) != null) { // ask if there is such node
 			this.edges.remove(key);
 			this.nodes.remove(key);
 			MC++;

@@ -1,10 +1,12 @@
 package Tests;
 
 import java.util.Collection;
+import java.util.List;
 
 import algorithms.Graph_Algo;
 import dataStructure.DGraph;
 import dataStructure.Node;
+import dataStructure.edge_data;
 import dataStructure.graph;
 import dataStructure.node_data;
 import utils.Point3D;
@@ -26,8 +28,12 @@ public class DgraphTest {
 		//g.removeNode(0);
 		//g.removeNode(0);
 		System.out.println(n2.getKey());
-		g.connect(n2.getKey(), n3.getKey(), 10);
-		g.connect(n2.getKey(), n.getKey(), 20);
+		g.connect(n.getKey(), n1.getKey(), 2);
+		g.connect(n.getKey(), n2.getKey(), 6);
+		g.connect(n1.getKey(), n2.getKey(), 3);
+		g.connect(n.getKey(), n3.getKey(), 1);
+		g.connect(n3.getKey(), n2.getKey(), 1);
+		g.connect(n2.getKey(), n.getKey(), 1);
 		System.out.println();
 		System.out.println(g.getMC());
 		
@@ -37,7 +43,16 @@ public class DgraphTest {
 		
 		graph g2 = g1.copy();
 		
-		g.removeNode(3);
+		Collection<edge_data> e = g.getE(n3.getKey());
+		
+		
+		
+		
+		
+		System.out.println("shortest is :" + g1.shortestPathDist(2, 0));
+		
+		System.out.println(g1.isConnected());
+		
 		
 		
 //		graph gofna = new DGraph();

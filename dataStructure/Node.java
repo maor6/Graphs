@@ -17,6 +17,14 @@ public class Node implements node_data {
 		this.weight = Double.POSITIVE_INFINITY;
 		this.tag = -1;
 		this.setVisited(false);
+		this.info = "";
+	}
+	public Node() {
+		//this.key = (Integer) null;
+		this.location = null;
+		this.weight = Double.POSITIVE_INFINITY;
+		this.tag = -1;
+		this.setVisited(false);
 	}
 	
 	@Override

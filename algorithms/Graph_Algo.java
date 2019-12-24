@@ -9,7 +9,10 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.PriorityQueue;
+import java.util.Queue;
 
 import dataStructure.DGraph;
 import dataStructure.Node;
@@ -85,25 +88,92 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 
 	@Override
 	public boolean isConnected() {
+		graph normal = this.copy();
+		graph reverse = turnEdges(new DGraph(), normal);
 
-		return false;
+		node_data a = null;
+		for (node_data n : normal.getV()) { // to find the first node
+			if (n != null) {
+				a = n;
+				break;
+			}
+		}
+		if (a != null) {
+			if (markVisited(a, normal) && markVisited(a, reverse)) {
+				return true;
+			}
+		}
+		return false; // if there is no nodes in the graph - not connected
+	}
+
+	private graph turnEdges(graph reverse, graph copy) { // reverse all the edges
+		for (node_data u : copy.getV()) {
+			node_data q = new Node(u.getKey(), u.getLocation());
+			reverse.addNode(q);
+		}
+		for (node_data n : copy.getV()) {
+			if (copy.getE(n.getKey()) != null) {
+				for (edge_data e : copy.getE(n.getKey())) {
+					reverse.connect(e.getDest(), e.getSrc(), e.getWeight());
+				}
+			}
+		}
+
+		return reverse;
+	}
+
+	private boolean markVisited(node_data n, graph g) {
+		if (g.getE(n.getKey()) != null) {
+			for (edge_data e : g.getE(n.getKey())) {
+				if (!g.getNode(e.getDest()).getInfo().equals("1")) {
+					n.setInfo("1");
+					markVisited(g.getNode(e.getDest()), g);
+				}
+			}
+		}
+		for (node_data v : g.getV()) {
+			if (v.getInfo().equals("")) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 	@Override
 	public double shortestPathDist(int src, int dest) {
-		// TODO Auto-generated method stub
-		return 0;
+		graph g2 = this.copy();
+
+		dijekstra(g2, src, dest);
+		return g2.getNode(dest).getWeight();
 	}
 
 	@Override
 	public List<node_data> shortestPath(int src, int dest) {
-		// TODO Auto-generated method stub
-		return null;
+		graph g2 = this.copy();
+		dijekstra(g2, src, dest);
+		List<node_data> l = new LinkedList<node_data>();
+		node_data temp = g2.getNode(dest);
+		while (temp.getKey() != src) {
+			l.add(temp);
+			temp = g2.getNode(temp.getTag());
+
+		}
+		l.add(temp);
+		int i = l.size() - 1;
+		List<node_data> ans = new LinkedList<node_data>();
+		ans.add(temp);
+		i--;
+		while (i != 0) {
+			ans.add(l.get(i));
+			i--;
+		}
+		ans.add(l.get(0));
+		return ans;
 	}
 
 	@Override
 	public List<node_data> TSP(List<Integer> targets) {
-		// TODO Auto-generated method stub
+
 		return null;
 	}
 
@@ -112,21 +182,51 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 		graph g = new DGraph();
 		for (node_data n : this.gr.getV()) {
 			if (n != null) {
-				node_data n1 = new Node(n.getKey(), n.getLocation());
+				node_data n1 = new Node(n.getKey(), n.getLocation()); // creat new node for deep copy
 				g.addNode(n1);
-				
+
 			}
-			if(this.gr.getE(n.getKey()) != null){
-			for (edge_data e : this.gr.getE(n.getKey())) {
-				if (e != null) {
-					edge_data e1 = new dataStructure.Edge(e.getSrc(), e.getDest(), e.getWeight());
-					g.connect(e1.getSrc(), e1.getDest(), e1.getWeight());
+			if (this.gr.getE(n.getKey()) != null) {
+				for (edge_data e : this.gr.getE(n.getKey())) {
+					if (e != null) {
+						edge_data e1 = new dataStructure.Edge(e.getSrc(), e.getDest(), e.getWeight());
+						g.connect(e1.getSrc(), e1.getDest(), e1.getWeight());
+					}
 				}
-			}
 			}
 		}
 
 		return g;
+	}
+
+	private void dijekstra(graph g2, int src, int dest) {
+		Collection<node_data> c = g2.getV();
+		MinHeap m = new MinHeap(c.size());
+		g2.getNode(src).setWeight(0);
+		for (node_data n : c) {
+			m.insert(n);
+		}
+
+		while (m.getSize() != 0) {
+
+			Node u = (Node) m.getMin();
+			m.remove();
+			if (g2.getE(u.getKey()) != null) {
+				Collection<edge_data> c2 = g2.getE(u.getKey());
+				for (edge_data e : c2) {
+					Node v = (Node) g2.getNode(e.getDest());
+					if (!v.isVisited()) {
+						double w = u.getWeight() + e.getWeight();
+						if (w < v.getWeight()) {
+							v.setWeight(w);
+							v.setTag(u.getKey());// to know the previous node with the lowest cost
+							m.minHeap();
+						}
+					}
+				}
+				u.setVisited(true);
+			}
+		}
 	}
 
 }
