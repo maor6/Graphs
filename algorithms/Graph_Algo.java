@@ -31,8 +31,7 @@ import dataStructure.node_data;
 public class Graph_Algo<E> implements graph_algorithms, Serializable {
 	private graph gr;
 
-	public Graph_Algo() {
-
+	public Graph_Algo() { // constructor
 	}
 
 	@Override
@@ -42,9 +41,9 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 
 	@Override
 	public void init(String file_name) {
-
+		
 		try {
-			FileInputStream file = new FileInputStream("file_name.txt");
+			FileInputStream file = new FileInputStream(file_name);
 			ObjectInputStream in = new ObjectInputStream(file);
 
 			this.gr = (graph) in.readObject();
@@ -71,12 +70,8 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 			FileOutputStream file = new FileOutputStream(file_name);
 			ObjectOutputStream out = new ObjectOutputStream(file);
 
-			out.writeObject(this.gr.getV());
-			for (node_data n : this.gr.getV()) {
-				out.writeObject(this.gr.getE(n.getKey()));
-
-			}
-
+			out.writeObject(this.gr);
+			
 			out.close();
 			file.close();
 
@@ -99,7 +94,7 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 			}
 		}
 		if (a != null) {
-			if (markVisited(a, normal) && markVisited(a, reverse)) {
+			if (markVisited(a, normal,a) && markVisited(a, reverse ,a)) {
 				return true;
 			}
 		}
@@ -121,21 +116,25 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 
 		return reverse;
 	}
-
-	private boolean markVisited(node_data n, graph g) {
+	
+	private boolean markVisited(node_data n, graph g , node_data start) {
 		if (g.getE(n.getKey()) != null) {
 			for (edge_data e : g.getE(n.getKey())) {
 				if (!g.getNode(e.getDest()).getInfo().equals("1")) {
 					n.setInfo("1");
-					markVisited(g.getNode(e.getDest()), g);
+					g.getNode(e.getDest()).setInfo("1");
+					markVisited(g.getNode(e.getDest()), g , start);
 				}
 			}
 		}
-		for (node_data v : g.getV()) {
-			if (v.getInfo().equals("")) {
-				return false;
+		if(n.getKey() == start.getKey()) {
+			for (node_data v : g.getV()) {
+				if (v.getInfo().equals("")) {
+					return false;
+				}
 			}
 		}
+		
 		return true;
 	}
 
@@ -153,12 +152,13 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 		dijekstra(g2, src, dest);
 		List<node_data> l = new LinkedList<node_data>();
 		node_data temp = g2.getNode(dest);
-		while (temp.getKey() != src) {
+		try {
+		while (temp.getKey() != src) {//begin from dest-node to src-node
 			l.add(temp);
 			temp = g2.getNode(temp.getTag());
 
 		}
-		l.add(temp);
+		l.add(temp);//to add src node
 		int i = l.size() - 1;
 		List<node_data> ans = new LinkedList<node_data>();
 		ans.add(temp);
@@ -169,6 +169,10 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 		}
 		ans.add(l.get(0));
 		return ans;
+		}
+		catch (Exception e) {
+			return null;
+		}
 	}
 
 	@Override
@@ -201,16 +205,16 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 
 	private void dijekstra(graph g2, int src, int dest) {
 		Collection<node_data> c = g2.getV();
-		MinHeap m = new MinHeap(c.size());
+		MinHeap m = new MinHeap();
 		g2.getNode(src).setWeight(0);
 		for (node_data n : c) {
 			m.insert(n);
 		}
 
-		while (m.getSize() != 0) {
+		while (m.getList().size() != 0) {
 
-			Node u = (Node) m.getMin();
-			m.remove();
+			Node u = (Node) m.extractMin();
+			
 			if (g2.getE(u.getKey()) != null) {
 				Collection<edge_data> c2 = g2.getE(u.getKey());
 				for (edge_data e : c2) {
@@ -220,7 +224,7 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 						if (w < v.getWeight()) {
 							v.setWeight(w);
 							v.setTag(u.getKey());// to know the previous node with the lowest cost
-							m.minHeap();
+							m.buildHeap();
 						}
 					}
 				}

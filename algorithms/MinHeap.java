@@ -1,148 +1,153 @@
 package algorithms;
 
-import dataStructure.Node;
+import java.util.ArrayList;
+import java.util.Collection;
+
 import dataStructure.node_data;
 
-public class MinHeap { 
-    private node_data[] Heap; 
-    private int size; 
-    private int maxsize; 
-  
-    private static final int FRONT = 0; 
-  
-    public MinHeap(int maxsize) 
-    { 
-        this.maxsize = maxsize; 
-        this.size = 0; 
-        Heap = new node_data[this.maxsize + 1]; 
-    } 
-  
-    // Function to return the position of 
-    // the parent for the node currently 
-    // at pos 
-    private int parent(int pos) 
-    { 
-        return pos / 2; 
-    } 
-  
-    // Function to return the position of the 
-    // left child for the node currently at pos 
-    private int leftChild(int pos) 
-    { 
-        return (2 * pos); 
-    } 
-  
-    // Function to return the position of 
-    // the right child for the node currently 
-    // at pos 
-    private int rightChild(int pos) 
-    { 
-        return (2 * pos) + 1; 
-    } 
-  
-    // Function that returns true if the passed 
-    // node is a leaf node 
-    private boolean isLeaf(int pos) 
-    { 
-        if (pos >= (size / 2) && pos <= size) { 
-            return true; 
-        } 
-        return false; 
-    } 
-  
-    // Function to swap two nodes of the heap 
-    private void swap(int fpos, int spos) 
-    { 
-        node_data tmp; 
-        tmp = Heap[fpos]; 
-        Heap[fpos] = Heap[spos]; 
-        Heap[spos] = tmp; 
-    } 
-  
-    // Function to heapify the node at pos 
-    private void minHeapify(int pos) 
-    { 
-  
-        // If the node is a non-leaf node and greater 
-        // than any of its child 
-        if (!isLeaf(pos)) { 
-            if (Heap[pos].getWeight() > Heap[leftChild(pos)].getWeight() 
-                || Heap[pos].getWeight() > Heap[rightChild(pos)].getWeight()) { 
-  
-                // Swap with the left child and heapify 
-                // the left child 
-                if (Heap[leftChild(pos)].getWeight() < Heap[rightChild(pos)].getWeight()) { 
-                    swap(pos, leftChild(pos)); 
-                    minHeapify(leftChild(pos)); 
-                } 
-  
-                // Swap with the right child and heapify 
-                // the right child 
-                else { 
-                    swap(pos, rightChild(pos)); 
-                    minHeapify(rightChild(pos)); 
-                } 
-            } 
-        } 
-    }
-    
-    public Node getMin() {
-    	return (Node) Heap[0];
-    }
-  
-    // Function to insert a node into the heap 
-    public void insert(node_data element) 
-    { 
-        if (size >= maxsize) { 
-            return; 
-        } 
-        
-        Heap[size++] = element; 
-        int current = size-1; 
-  
-        while (Heap[current].getWeight() < Heap[parent(current)].getWeight()) { 
-            swap(current, parent(current)); 
-            current = parent(current); 
-        } 
-    } 
-  
-    // Function to print the contents of the heap 
-    public void print() 
-    { 
-        for (int i = 1; i <= size / 2; i++) { 
-            System.out.print(" PARENT : " + Heap[i] 
-                             + " LEFT CHILD : " + Heap[2 * i] 
-                             + " RIGHT CHILD :" + Heap[2 * i + 1]); 
-            System.out.println(); 
-        } 
-    } 
-  
-    // Function to build the min heap using 
-    // the minHeapify 
-    public void minHeap() 
-    { 
-        for (int pos = (size / 2); pos >= 1; pos--) { 
-            minHeapify(pos); 
-        } 
-    } 
-  
-    // Function to remove and return the minimum 
-    // element from the heap 
-    public node_data remove() 
-    { 
-        node_data popped = Heap[FRONT]; 
-        Heap[FRONT] = Heap[--size];
-        minHeapify(FRONT); 
-        return popped; 
-    }
+public class MinHeap {
 
-	public int getSize() {
-		return size;
+    private ArrayList<node_data> list;
+
+    public ArrayList<node_data> getList() {
+		return list;
 	}
 
-	public void setSize(int size) {
-		this.size = size;
-	} 
-    
-    
+	public MinHeap() {
+
+        this.list = new ArrayList<node_data>();
+    }
+
+    public MinHeap(ArrayList<node_data> items) {
+
+        this.list = items;
+        buildHeap();
+    }
+
+    public void insert(node_data item) {
+
+        list.add(item);
+        int i = list.size() - 1;
+        int parent = parent(i);
+
+        while (parent != i && list.get(i).getWeight() < list.get(parent).getWeight()) {
+
+            swap(i, parent);
+            i = parent;
+            parent = parent(i);
+        }
+    }
+
+    public void buildHeap() {
+
+        for (int i = list.size() / 2; i >= 0; i--) {
+            minHeapify(i);
+        }
+    }
+
+    public node_data extractMin() {
+
+        if (list.size() == 0) {
+
+            throw new IllegalStateException("MinHeap is EMPTY");
+        } else if (list.size() == 1) {
+
+        	node_data min = list.remove(0);
+            return min;
+        }
+
+        // remove the last item ,and set it as new root
+        node_data min = list.get(0);
+        node_data lastItem = list.remove(list.size() - 1);
+        list.set(0, lastItem);
+
+        // bubble-down until heap property is maintained
+        minHeapify(0);
+
+        // return min key
+        return min;
+    }
+
+//    public void decreaseKey(node_data i, int key) {
+//
+//        if (list.get(i).getWeight() < key) {
+//
+//            throw new IllegalArgumentException("Key is larger than the original key");
+//        }
+//
+//        list.set(i, key);
+//        int parent = parent(i);
+//
+//        // bubble-up until heap property is maintained
+//        while (i > 0 && list.get(parent) > list.get(i)) {
+//
+//            swap(i, parent);
+//            i = parent;
+//            parent = parent(parent);
+//        }
+//    }
+
+    private void minHeapify(int i) {
+
+        int left = left(i);
+        int right = right(i);
+        int smallest = -1;
+
+        // find the smallest key between current node and its children.
+        if (left <= list.size() - 1 && list.get(left).getWeight() < list.get(i).getWeight()) {
+            smallest = left;
+        } else {
+            smallest = i;
+        }
+
+        if (right <= list.size() - 1 && list.get(right).getWeight() < list.get(smallest).getWeight()) {
+            smallest = right;
+        }
+
+        // if the smallest key is not the current key then bubble-down it.
+        if (smallest != i) {
+
+            swap(i, smallest);
+            minHeapify(smallest);
+        }
+    }
+
+    public node_data getMin() {
+
+        return list.get(0);
+    }
+
+    public boolean isEmpty() {
+
+        return list.size() == 0;
+    }
+
+    private int right(int i) {
+
+        return 2 * i + 2;
+    }
+
+    private int left(int i) {
+
+        return 2 * i + 1;
+    }
+
+    private int parent(int i) {
+
+        if (i % 2 == 1) {
+            return i / 2;
+        }
+
+        return (i - 1) / 2;
+    }
+
+    private void swap(int i, int parent) {
+
+    	node_data temp = list.get(parent);
+        list.set(parent, list.get(i));
+        list.set(i, temp);
+    }
+
+	
+
 }
