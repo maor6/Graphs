@@ -2,14 +2,22 @@ package dataStructure;
 
 import java.io.Serializable;
 
-public class Edge implements edge_data,Serializable{
+public class Edge implements edge_data, Serializable {
 	private int src;
 	private int dest;
 	private double weight;
 	private String info;
 	private int tag;
-	
-	public Edge(int s , int d , double w) {
+
+	public Edge() {
+		this.src = 0;
+		this.dest = 0;
+		this.weight = 0;
+		this.info = null;
+		this.tag = -1;
+	}
+
+	public Edge(int s, int d, double w) {
 		this.src = s;
 		this.dest = d;
 		this.weight = w;
@@ -39,7 +47,7 @@ public class Edge implements edge_data,Serializable{
 	@Override
 	public void setInfo(String s) {
 		this.info = s;
-		
+
 	}
 
 	@Override
@@ -50,8 +58,7 @@ public class Edge implements edge_data,Serializable{
 	@Override
 	public void setTag(int t) {
 		this.tag = t;
-		
+
 	}
-	
 
 }

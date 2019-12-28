@@ -1,6 +1,5 @@
 package dataStructure;
 
-
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashMap;
@@ -18,30 +17,44 @@ public class DGraph implements graph, Serializable {
 
 	@Override
 	public node_data getNode(int key) {
-		return this.nodes.get(key);
+		return this.nodes.get(key); // if not exist its return null?
 	}
 
 	@Override
 	public edge_data getEdge(int src, int dest) {
-		return this.edges.get(src).get(dest);
+		try {
+			return this.edges.get(src).get(dest); // if edge not exist should throw exception
+		} catch (NullPointerException e) {
+			return null;
+		}
 	}
 
 	@Override
 	public void addNode(node_data n) {
-		this.nodes.put(n.getKey(), n);
-		MC++;
+		try {
+			if (this.nodes.get(n.getKey()) == null) {
+				this.nodes.put(n.getKey(), n);
+				MC++;
+			} else {
+				throw new RuntimeException();
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			throw new RuntimeException("this key ia already used");
+
+		}
 	}
 
 	@Override
 	public void connect(int src, int dest, double w) {
 		Edge e = new Edge(src, dest, w);
-		// this.edges.get(src).put(dest, e); //this is by gofna
-		if (this.edges.get(src) == null) { // add a new hash if there isnt one to the same key
-			this.edges.put(src, new HashMap<Integer, edge_data>()); // as the node the key is (src)s
+		if (this.edges.get(src) == null) { // add a new hash if there is no any edge from this key yet
+			this.edges.put(src, new HashMap<Integer, edge_data>()); // the key is src
 
 		}
 		this.edges.get(src).put(dest, e); // add the edge to the hash by key (the key is dest)
 		MC++;
+
 	}
 
 	@Override
@@ -66,7 +79,7 @@ public class DGraph implements graph, Serializable {
 				this.edges.get(n.getKey()).remove(key);
 			}
 		}
-		if (this.nodes.get(key) != null) { // ask if there is such node
+		if (removed != null) { // ask if this node exist
 			this.edges.remove(key);
 			this.nodes.remove(key);
 			MC++;
@@ -79,13 +92,12 @@ public class DGraph implements graph, Serializable {
 	@Override
 	public edge_data removeEdge(int src, int dest) {
 		edge_data removed = this.edges.get(src).get(dest);
-		if (this.edges.get(src).get(dest) != null) {
+		if (removed != null) {
 			this.edges.get(src).remove(dest);
 			MC++;
 			return removed;
 		}
 		return null;
-
 	}
 
 	@Override

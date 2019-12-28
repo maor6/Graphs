@@ -32,6 +32,7 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 	private graph gr;
 
 	public Graph_Algo() { // constructor
+		this.gr = new DGraph();
 	}
 
 	@Override
@@ -176,8 +177,10 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 	}
 
 	@Override
-	public List<node_data> TSP(List<Integer> targets) {
-
+	public List<node_data> TSP(List<Integer> targets) { // to do
+		if( this.isConnected() == false) {
+			return null;
+		}
 		return null;
 	}
 

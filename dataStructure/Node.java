@@ -12,21 +12,21 @@ public class Node implements node_data, Serializable {
 	private int tag; //the minimum cost we have reach at the current node
 	private boolean visited;
 	
-
-	public Node(int key, Point3D location) {
-		this.key = key;
-		this.location = location;
-		this.weight = Double.POSITIVE_INFINITY;
-		this.tag = -1;
-		this.setVisited(false);
-		this.info = "";
-	}
+	
 	public Node() {
-		//this.key = (Integer) null;
 		this.location = null;
 		this.weight = Double.POSITIVE_INFINITY;
 		this.tag = -1;
 		this.setVisited(false);
+	}
+
+	public Node(int key, Point3D location) {
+		this.key = key;
+		this.location = new Point3D(location);
+		this.weight = Double.POSITIVE_INFINITY;
+		this.tag = -1;
+		this.setVisited(false);
+		this.info = "";
 	}
 	
 	@Override
