@@ -71,7 +71,7 @@ public class DGraph implements graph, Serializable {
 	}
 
 	@Override
-	public node_data removeNode(int key) {// to fix
+	public node_data removeNode(int key) {
 		node_data removed = this.nodes.get(key);
 		LinkedList<node_data> list = new LinkedList<node_data>(this.nodes.values());
 		for (node_data n : list) {

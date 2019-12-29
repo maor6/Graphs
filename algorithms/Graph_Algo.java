@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
+
+
 import dataStructure.DGraph;
 import dataStructure.Node;
 import dataStructure.edge_data;
@@ -42,7 +44,7 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 
 	@Override
 	public void init(String file_name) {
-		
+
 		try {
 			FileInputStream file = new FileInputStream(file_name);
 			ObjectInputStream in = new ObjectInputStream(file);
@@ -72,7 +74,7 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 			ObjectOutputStream out = new ObjectOutputStream(file);
 
 			out.writeObject(this.gr);
-			
+
 			out.close();
 			file.close();
 
@@ -95,7 +97,7 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 			}
 		}
 		if (a != null) {
-			if (markVisited(a, normal,a) && markVisited(a, reverse ,a)) {
+			if (markVisited(a, normal, a) && markVisited(a, reverse, a)) {
 				return true;
 			}
 		}
@@ -117,25 +119,25 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 
 		return reverse;
 	}
-	
-	private boolean markVisited(node_data n, graph g , node_data start) {
+
+	private boolean markVisited(node_data n, graph g, node_data start) {
 		if (g.getE(n.getKey()) != null) {
 			for (edge_data e : g.getE(n.getKey())) {
 				if (!g.getNode(e.getDest()).getInfo().equals("1")) {
 					n.setInfo("1");
 					g.getNode(e.getDest()).setInfo("1");
-					markVisited(g.getNode(e.getDest()), g , start);
+					markVisited(g.getNode(e.getDest()), g, start);
 				}
 			}
 		}
-		if(n.getKey() == start.getKey()) {
+		if (n.getKey() == start.getKey()) {
 			for (node_data v : g.getV()) {
 				if (v.getInfo().equals("")) {
 					return false;
 				}
 			}
 		}
-		
+
 		return true;
 	}
 
@@ -154,34 +156,54 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 		List<node_data> l = new LinkedList<node_data>();
 		node_data temp = g2.getNode(dest);
 		try {
-		while (temp.getKey() != src) {//begin from dest-node to src-node
-			l.add(temp);
-			temp = g2.getNode(temp.getTag());
+			while (temp.getKey() != src) {// begin from dest-node to src-node
+				l.add(temp);
+				temp = g2.getNode(temp.getTag());
 
-		}
-		l.add(temp);//to add src node
-		int i = l.size() - 1;
-		List<node_data> ans = new LinkedList<node_data>();
-		ans.add(temp);
-		i--;
-		while (i != 0) {
-			ans.add(l.get(i));
+			}
+			l.add(temp);// to add src node
+			int i = l.size() - 1;
+			List<node_data> ans = new LinkedList<node_data>();
+			ans.add(temp);
 			i--;
-		}
-		ans.add(l.get(0));
-		return ans;
-		}
-		catch (Exception e) {
+			while (i != 0) {
+				ans.add(l.get(i));
+				i--;
+			}
+			ans.add(l.get(0));
+			return ans;
+		} catch (Exception e) {
 			return null;
 		}
 	}
 
 	@Override
 	public List<node_data> TSP(List<Integer> targets) { // to do
-		if( this.isConnected() == false) {
+		if (this.isConnected() == false) {
 			return null;
 		}
-		return null;
+		List<node_data> ans = new LinkedList<>();
+		int index = 1;
+		for (int i = 0; i < targets.size(); i++) {
+			while ( index < targets.size() && this.gr.getNode(targets.get(index)).getInfo() == "1") {
+				index++;
+			}
+			if( index == targets.size()) {
+				break;
+			}
+			List<node_data> temp = shortestPath(targets.get(i), targets.get(index));
+			for (node_data n : temp) {
+				if(n.getKey() == targets.get(i) && i != 0) {
+					continue;
+				}
+				ans.add(n);
+				if (targets.contains(n.getKey())) {
+					this.gr.getNode(n.getKey()).setInfo("1");
+				}
+			}
+
+		}
+		return ans;
 	}
 
 	@Override
@@ -217,7 +239,7 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 		while (m.getList().size() != 0) {
 
 			Node u = (Node) m.extractMin();
-			
+
 			if (g2.getE(u.getKey()) != null) {
 				Collection<edge_data> c2 = g2.getE(u.getKey());
 				for (edge_data e : c2) {
