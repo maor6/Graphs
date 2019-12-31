@@ -88,7 +88,8 @@ public class DGraph implements graph, Serializable {
 	 *             between src-->dest.
 	 */
 	public void connect(int src, int dest, double w) {
-		if (this.nodes.get(src) != null && this.nodes.get(dest) != null) { // if one or more of the nodes doesn't exist- don't do anything.
+		if (this.nodes.get(src) != null && this.nodes.get(dest) != null) { // if one or more of the nodes doesn't exist-
+																			// don't do anything.
 
 			Edge e = new Edge(src, dest, w);
 			if (this.edges.get(src) == null) { // add a new hash if there is no any edge from this key yet
@@ -159,11 +160,13 @@ public class DGraph implements graph, Serializable {
 	 * @return the data of the removed edge (null if none).
 	 */
 	public edge_data removeEdge(int src, int dest) {
-		edge_data removed = this.edges.get(src).get(dest);
-		if (removed != null) {
-			this.edges.get(src).remove(dest);
-			MC++;
-			return removed;
+		if (this.edges.get(src) != null) {
+			edge_data removed = this.edges.get(src).get(dest);
+			if (removed != null) {
+				this.edges.get(src).remove(dest);
+				MC++;
+				return removed;
+			}
 		}
 		return null;
 	}
