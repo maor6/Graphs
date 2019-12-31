@@ -14,8 +14,6 @@ import java.util.List;
 import java.util.PriorityQueue;
 import java.util.Queue;
 
-
-
 import dataStructure.DGraph;
 import dataStructure.Node;
 import dataStructure.edge_data;
@@ -27,22 +25,65 @@ import dataStructure.node_data;
  * be implemented as part of Ex2 - Do edit this class.
  * 
  * @author
- * @param <E>
  *
  */
 public class Graph_Algo<E> implements graph_algorithms, Serializable {
 	private graph gr;
 
-	public Graph_Algo() { // constructor
+	/**
+	 * default constructor - build empty DGraph
+	 */
+	public Graph_Algo() {
 		this.gr = new DGraph();
 	}
 
-	@Override
+	/**
+	 * constructor
+	 * 
+	 * @param g the graph to run the algorithms
+	 */
+	public Graph_Algo(graph g) {
+		this.gr = g;
+	}
+
+	/**
+	 * Init this set of algorithms on the parameter - graph.
+	 * 
+	 * @param g the graph to run the algorithms
+	 */
 	public void init(graph g) {
 		this.gr = g;
 	}
 
-	@Override
+	/** 
+	 * Compute a deep copy of this graph.
+	 * @return the copy of this graph
+	 */
+	public graph copy() {
+		graph g = new DGraph();
+		for (node_data n : this.gr.getV()) {
+			if (n != null) {
+				node_data n1 = new Node(n.getKey(), n.getLocation()); // create new node for deep copy
+				g.addNode(n1);
+
+			}
+			if (this.gr.getE(n.getKey()) != null) {
+				for (edge_data e : this.gr.getE(n.getKey())) {
+					if (e != null) {
+						edge_data e1 = new dataStructure.Edge(e.getSrc(), e.getDest(), e.getWeight());
+						g.connect(e1.getSrc(), e1.getDest(), e1.getWeight());
+					}
+				}
+			}
+		}
+
+		return g;
+	}
+
+	/**
+	 * Init a graph from file
+	 * @param file_name
+	 */
 	public void init(String file_name) {
 
 		try {
@@ -67,7 +108,10 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 
 	}
 
-	@Override
+	/** 
+	 * Saves the graph to a file.
+	 * @param file_name
+	 */
 	public void save(String file_name) {
 		try {
 			FileOutputStream file = new FileOutputStream(file_name);
@@ -84,8 +128,17 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 		}
 	}
 
-	@Override
+	/**
+	 * Returns true if and only if (iff) there is a valid path from EVREY node to
+	 * each other node. NOTE: assume directional graph - a valid path (a-->b) does
+	 * NOT imply a valid path (b-->a).
+	 * 
+	 * @return true if the graph is strong connected
+	 */
 	public boolean isConnected() {
+		if(this.gr.nodeSize() == 0) {
+			return true;
+		}
 		graph normal = this.copy();
 		graph reverse = turnEdges(new DGraph(), normal);
 
@@ -141,7 +194,13 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 		return true;
 	}
 
-	@Override
+	/**
+	 * returns the length of the shortest path between src to dest
+	 * 
+	 * @param src  - start node
+	 * @param dest - end (target) node
+	 * @return the "weight"(length) of the shortest path.
+	 */
 	public double shortestPathDist(int src, int dest) {
 		graph g2 = this.copy();
 
@@ -149,7 +208,15 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 		return g2.getNode(dest).getWeight();
 	}
 
-	@Override
+	/**
+	 * returns the the shortest path between src to dest - as an ordered List of
+	 * nodes: src--> n1-->n2-->...dest see:
+	 * https://en.wikipedia.org/wiki/Shortest_path_problem
+	 * 
+	 * @param src  - start node
+	 * @param dest - end (target) node
+	 * @return the list of the nodes in the shortest path.
+	 */
 	public List<node_data> shortestPath(int src, int dest) {
 		graph g2 = this.copy();
 		dijekstra(g2, src, dest);
@@ -177,23 +244,28 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 		}
 	}
 
-	@Override
-	public List<node_data> TSP(List<Integer> targets) { // to do
+	/**
+	 * computes a relatively short path which visit each node in the targets List.
+	 * 
+	 * @param targets- the list to visit
+	 * @return the list of the node we pass and visit to visit all the nodes in the targets list
+	 */
+	public List<node_data> TSP(List<Integer> targets) { 
 		if (this.isConnected() == false) {
 			return null;
 		}
 		List<node_data> ans = new LinkedList<>();
 		int index = 1;
 		for (int i = 0; i < targets.size(); i++) {
-			while ( index < targets.size() && this.gr.getNode(targets.get(index)).getInfo() == "1") {
+			while (index < targets.size() && this.gr.getNode(targets.get(index)).getInfo() == "1") {
 				index++;
 			}
-			if( index == targets.size()) {
+			if (index == targets.size()) {
 				break;
 			}
 			List<node_data> temp = shortestPath(targets.get(i), targets.get(index));
 			for (node_data n : temp) {
-				if(n.getKey() == targets.get(i) && i != 0) {
+				if (n.getKey() == targets.get(i) && i != 0) {
 					continue;
 				}
 				ans.add(n);
@@ -204,28 +276,6 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 
 		}
 		return ans;
-	}
-
-	@Override
-	public graph copy() {
-		graph g = new DGraph();
-		for (node_data n : this.gr.getV()) {
-			if (n != null) {
-				node_data n1 = new Node(n.getKey(), n.getLocation()); // creat new node for deep copy
-				g.addNode(n1);
-
-			}
-			if (this.gr.getE(n.getKey()) != null) {
-				for (edge_data e : this.gr.getE(n.getKey())) {
-					if (e != null) {
-						edge_data e1 = new dataStructure.Edge(e.getSrc(), e.getDest(), e.getWeight());
-						g.connect(e1.getSrc(), e1.getDest(), e1.getWeight());
-					}
-				}
-			}
-		}
-
-		return g;
 	}
 
 	private void dijekstra(graph g2, int src, int dest) {

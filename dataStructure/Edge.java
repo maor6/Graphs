@@ -2,6 +2,13 @@ package dataStructure;
 
 import java.io.Serializable;
 
+/**
+ * This class create edge and the set of operations applicable on a 
+ * directional edge(src,dest) in a (directional) weighted graph.
+ * 
+ * @author Gofna and Maor
+ *
+ */
 public class Edge implements edge_data, Serializable {
 	private int src;
 	private int dest;
