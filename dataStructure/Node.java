@@ -13,12 +13,12 @@ public class Node implements node_data, Serializable {
 	private boolean visited;
 	
 	
-	public Node() {
-		this.location = null;
-		this.weight = Double.POSITIVE_INFINITY;
-		this.tag = -1;
-		this.setVisited(false);
-	}
+//	public Node() {
+//		this.location = null;
+//		this.weight = Double.POSITIVE_INFINITY;
+//		this.tag = -1;
+//		this.setVisited(false);
+//	}
 
 	public Node(int key, Point3D location) {
 		this.key = key;
