@@ -55,8 +55,9 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 		this.gr = g;
 	}
 
-	/** 
+	/**
 	 * Compute a deep copy of this graph.
+	 * 
 	 * @return the copy of this graph
 	 */
 	public graph copy() {
@@ -67,21 +68,23 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 				g.addNode(n1);
 
 			}
+
+		}
+		for (node_data n : this.gr.getV()) {
 			if (this.gr.getE(n.getKey()) != null) {
 				for (edge_data e : this.gr.getE(n.getKey())) {
 					if (e != null) {
-						edge_data e1 = new dataStructure.Edge(e.getSrc(), e.getDest(), e.getWeight());
-						g.connect(e1.getSrc(), e1.getDest(), e1.getWeight());
+						g.connect(e.getSrc(), e.getDest(), e.getWeight());
 					}
 				}
 			}
 		}
-
 		return g;
 	}
 
 	/**
 	 * Init a graph from file
+	 * 
 	 * @param file_name
 	 */
 	public void init(String file_name) {
@@ -108,8 +111,9 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 
 	}
 
-	/** 
+	/**
 	 * Saves the graph to a file.
+	 * 
 	 * @param file_name
 	 */
 	public void save(String file_name) {
@@ -136,7 +140,7 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 	 * @return true if the graph is strong connected
 	 */
 	public boolean isConnected() {
-		if(this.gr.nodeSize() == 0) {
+		if (this.gr.nodeSize() == 0) {
 			return true;
 		}
 		graph normal = this.copy();
@@ -248,16 +252,32 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 	 * computes a relatively short path which visit each node in the targets List.
 	 * 
 	 * @param targets- the list to visit
-	 * @return the list of the node we pass and visit to visit all the nodes in the targets list
+	 * @return the list of the node we pass and visit to visit all the nodes in the
+	 *         targets list
 	 */
-	public List<node_data> TSP(List<Integer> targets) { 
+	public List<node_data> TSP(List<Integer> targets) {
+		graph con = new DGraph();
 		if (this.isConnected() == false) {
-			return null;
+			graph sub = new DGraph();
+			sub = this.copy();
+			for (node_data n : this.gr.getV()) {// remove all the nodes that not in the targets list
+				if (!targets.contains(n.getKey())) {
+					sub.removeNode(n.getKey());
+				}
+			}
+			Graph_Algo<E> subA = new Graph_Algo<E>(sub);
+			if (subA.isConnected()) {
+				con = sub;
+			} else {
+				return null;
+			}
+		} else {
+			con = this.gr;
 		}
 		List<node_data> ans = new LinkedList<>();
 		int index = 1;
 		for (int i = 0; i < targets.size(); i++) {
-			while (index < targets.size() && this.gr.getNode(targets.get(index)).getInfo() == "1") {
+			while (index < targets.size() && con.getNode(targets.get(index)).getInfo() == "1") {
 				index++;
 			}
 			if (index == targets.size()) {
@@ -270,7 +290,7 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 				}
 				ans.add(n);
 				if (targets.contains(n.getKey())) {
-					this.gr.getNode(n.getKey()).setInfo("1");
+					con.getNode(n.getKey()).setInfo("1");
 				}
 			}
 
