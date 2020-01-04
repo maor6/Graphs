@@ -47,7 +47,8 @@ public class Testim {
 
 	public static void test2() {
 		graph g = new DGraph();
-
+		Graph_GUI gu = new Graph_GUI(g);
+		
 		g.addNode(new Node(0, new Point3D(0, -40)));
 		g.addNode(new Node(1, new Point3D(10, 30)));
 		g.addNode(new Node(2, new Point3D(30, -10)));
@@ -55,7 +56,6 @@ public class Testim {
 		g.addNode(new Node(4, new Point3D(50, 1)));
 		g.addNode(new Node(5, new Point3D(60, 70)));
 		g.addNode(new Node(6, new Point3D(65, -12)));
-
 		g.connect(0, 1, 20);
 		g.connect(1, 2, 20);
 		g.connect(0,4, 20);
@@ -69,13 +69,12 @@ public class Testim {
 
 		Graph_Algo ga = new Graph_Algo(g);
 
-		Graph_GUI gu = new Graph_GUI(g);
 		List<Integer> l = new LinkedList();
-		l.add(1);
-		l.add(2);
 		l.add(0);
-		l.add(4);
-		l.add(5);
+		l.add(1);
+//		l.add(0);
+//		l.add(4);
+//		l.add(5);
 		List<node_data> ln = ga.TSP(l);
 		if (ln != null) {
 			for (node_data n : ln) {
@@ -85,6 +84,9 @@ public class Testim {
 		} else {
 			System.out.println("none");
 		}
-
+		
+		
+		
 	}
+	
 }

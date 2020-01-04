@@ -27,14 +27,14 @@ import dataStructure.node_data;
  * @author
  *
  */
-public class Graph_Algo<E> implements graph_algorithms, Serializable {
+public class Graph_Algo implements graph_algorithms, Serializable {
 	private graph gr;
 
 	/**
 	 * default constructor - build empty DGraph
 	 */
 	public Graph_Algo() {
-		this.gr = new DGraph();
+		this.setGr(new DGraph());
 	}
 
 	/**
@@ -43,7 +43,7 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 	 * @param g the graph to run the algorithms
 	 */
 	public Graph_Algo(graph g) {
-		this.gr = g;
+		this.setGr(g);
 	}
 
 	/**
@@ -52,7 +52,7 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 	 * @param g the graph to run the algorithms
 	 */
 	public void init(graph g) {
-		this.gr = g;
+		this.setGr(g);
 	}
 
 	/**
@@ -62,7 +62,7 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 	 */
 	public graph copy() {
 		graph g = new DGraph();
-		for (node_data n : this.gr.getV()) {
+		for (node_data n : this.getGr().getV()) {
 			if (n != null) {
 				node_data n1 = new Node(n.getKey(), n.getLocation()); // create new node for deep copy
 				g.addNode(n1);
@@ -70,9 +70,9 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 			}
 
 		}
-		for (node_data n : this.gr.getV()) {
-			if (this.gr.getE(n.getKey()) != null) {
-				for (edge_data e : this.gr.getE(n.getKey())) {
+		for (node_data n : this.getGr().getV()) {
+			if (this.getGr().getE(n.getKey()) != null) {
+				for (edge_data e : this.getGr().getE(n.getKey())) {
 					if (e != null) {
 						g.connect(e.getSrc(), e.getDest(), e.getWeight());
 					}
@@ -93,7 +93,7 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 			FileInputStream file = new FileInputStream(file_name);
 			ObjectInputStream in = new ObjectInputStream(file);
 
-			this.gr = (graph) in.readObject();
+			this.setGr((graph) in.readObject());
 
 			in.close();
 			file.close();
@@ -121,7 +121,7 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 			FileOutputStream file = new FileOutputStream(file_name);
 			ObjectOutputStream out = new ObjectOutputStream(file);
 
-			out.writeObject(this.gr);
+			out.writeObject(this.getGr());
 
 			out.close();
 			file.close();
@@ -140,7 +140,7 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 	 * @return true if the graph is strong connected
 	 */
 	public boolean isConnected() {
-		if (this.gr.nodeSize() == 0) {
+		if (this.getGr().nodeSize() == 0) {
 			return true;
 		}
 		graph normal = this.copy();
@@ -256,23 +256,24 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 	 *         targets list
 	 */
 	public List<node_data> TSP(List<Integer> targets) {
+		
 		graph con = new DGraph();
 		if (this.isConnected() == false) {
 			graph sub = new DGraph();
 			sub = this.copy();
-			for (node_data n : this.gr.getV()) {// remove all the nodes that not in the targets list
+			for (node_data n : this.getGr().getV()) {// remove all the nodes that not in the targets list
 				if (!targets.contains(n.getKey())) {
 					sub.removeNode(n.getKey());
 				}
 			}
-			Graph_Algo<E> subA = new Graph_Algo<E>(sub);
+			Graph_Algo subA = new Graph_Algo(sub);
 			if (subA.isConnected()) {
 				con = sub;
 			} else {
 				return null;
 			}
 		} else {
-			con = this.gr;
+			con = this.getGr();
 		}
 		List<node_data> ans = new LinkedList<>();
 		int index = 1;
@@ -326,6 +327,14 @@ public class Graph_Algo<E> implements graph_algorithms, Serializable {
 				u.setVisited(true);
 			}
 		}
+	}
+
+	public graph getGr() {
+		return gr;
+	}
+
+	public void setGr(graph gr) {
+		this.gr = gr;
 	}
 
 }

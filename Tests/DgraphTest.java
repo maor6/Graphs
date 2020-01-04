@@ -18,10 +18,10 @@ import utils.Point3D;
 class DgraphTest {
 	static graph g = new DGraph();
 	
-//	//@BeforeAll
-//	void createGraph() {
-//		graph g = new DGraph();
-//	}
+	//@BeforeAll
+	public static void createGraph() {
+		
+	}
 	
 	@Test
 	void AddNodeTest() { // check addNode function and getNode also
@@ -86,7 +86,7 @@ class DgraphTest {
 //	void getMcTest() {
 //		int actual = g.getMC();
 //		System.out.println(actual);
-//		int expected = ;
+//		int expected =  ;
 //		assertEquals(expected, actual);
 //	}
 }
