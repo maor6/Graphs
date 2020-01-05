@@ -6,13 +6,9 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.PriorityQueue;
-import java.util.Queue;
 
 import dataStructure.DGraph;
 import dataStructure.Node;
@@ -21,7 +17,7 @@ import dataStructure.graph;
 import dataStructure.node_data;
 
 /**
- * This empty class represents the set of graph-theory algorithms which should
+ * This  class represents the set of graph-theory algorithms which should
  * be implemented as part of Ex2 - Do edit this class.
  * 
  * @author
@@ -256,7 +252,6 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 	 *         targets list
 	 */
 	public List<node_data> TSP(List<Integer> targets) {
-		
 		graph con = new DGraph();
 		if (this.isConnected() == false) {
 			graph sub = new DGraph();
@@ -273,7 +268,7 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 				return null;
 			}
 		} else {
-			con = this.getGr();
+			con = this.copy();
 		}
 		List<node_data> ans = new LinkedList<>();
 		int index = 1;
@@ -296,6 +291,7 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 			}
 
 		}
+		
 		return ans;
 	}
 

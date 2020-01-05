@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
 
+import utils.Range;
+
 /**
  * This class create a directional weighted graph. The class has a road-system
  * or communication network in mind - and should support a large number of nodes
@@ -59,6 +61,7 @@ public class DGraph implements graph, Serializable {
 	/**
 	 * add a new node to the graph with the given node_data. this method run in O(1)
 	 * time.
+	 * if the key is already exist, should throw exception and not replace the previous one.
 	 * 
 	 * @param n the node to add
 	 */
@@ -74,7 +77,6 @@ public class DGraph implements graph, Serializable {
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new RuntimeException("this key ia already used");
-
 		}
 	}
 

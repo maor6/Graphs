@@ -61,7 +61,6 @@ import java.io.IOException;
 
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.TreeSet;
@@ -78,8 +77,6 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 import algorithms.Graph_Algo;
-import algorithms.graph_algorithms;
-import dataStructure.graph;
 import dataStructure.node_data;
 import gui.Graph_GUI;
 
@@ -1757,7 +1754,7 @@ public class StdDraw implements ActionListener, MouseListener, MouseMotionListen
 			JFrame srcDest = new JFrame();
 			String src = JOptionPane.showInputDialog(srcDest, "insert source key:");
 			JFrame srcDest1 = new JFrame();
-			String dest = JOptionPane.showInputDialog(srcDest, "insert destination key:");
+			String dest = JOptionPane.showInputDialog(srcDest1, "insert destination key:");
 			double w = gui.drawShotrestPath(Integer.parseInt(src), Integer.parseInt(dest));
 			JFrame weight = new JFrame();
 			JOptionPane.showMessageDialog(weight, "the shortest path cost :" + w);
@@ -1776,9 +1773,10 @@ public class StdDraw implements ActionListener, MouseListener, MouseMotionListen
 
 		if (str.equals("TSP")) {
 			gui.initGUI();
-			JFrame TSPLIST = new JFrame();
-			String list = JOptionPane.showInputDialog(TSPLIST, "insert keys with (,) between: ");
+			JFrame Targets = new JFrame();
+			String list = JOptionPane.showInputDialog(Targets, "insert keys with (,) between: ");
 			String[] keys = list.split(",");
+			
 			LinkedList<Integer> targets = new LinkedList<Integer>();
 			StringBuilder pathString = new StringBuilder();
 			for (String s : keys) {
@@ -1796,9 +1794,9 @@ public class StdDraw implements ActionListener, MouseListener, MouseMotionListen
 					else
 						pathString.append("" + path.get(i).getKey());
 				}
-				JOptionPane.showMessageDialog(TSPLIST, pathString);
+				JOptionPane.showMessageDialog(Targets, pathString);
 			} else {
-				JOptionPane.showMessageDialog(TSPLIST, "There is no  path between the nodes or the list graph is not connected.");
+				JOptionPane.showMessageDialog(Targets, "There is no  path between the nodes or the list graph is not connected.");
 			}
 		}
 	}

@@ -1,7 +1,7 @@
 package gui;
 
 import java.awt.Color;
-import java.util.LinkedList;
+import java.util.Collection;
 import java.util.List;
 
 import algorithms.Graph_Algo;
@@ -9,6 +9,7 @@ import dataStructure.DGraph;
 import dataStructure.edge_data;
 import dataStructure.graph;
 import dataStructure.node_data;
+import utils.Range;
 import utils.StdDraw;
 
 public class Graph_GUI implements Runnable {
@@ -16,6 +17,8 @@ public class Graph_GUI implements Runnable {
 	private graph g = new DGraph();
 	private Graph_Algo ga = new Graph_Algo();
 	private int count;
+    private static Range Rx= new Range(0,0);
+    private static Range Ry= new Range(0,0);
 
 	public Graph_GUI(graph g) {
 		this.g = g;
@@ -23,6 +26,7 @@ public class Graph_GUI implements Runnable {
 		StdDraw.gui = this;
 		StdDraw.ga = this.ga;
 		initGUI();
+		this.count = this.g.getMC();
 		Thread t1 = new Thread(this);
 		t1.start();
 
@@ -31,9 +35,11 @@ public class Graph_GUI implements Runnable {
 	public void initGUI() {
 		StdDraw.clear();
 		StdDraw.setCanvasSize(700, 600);
-		StdDraw.setScale(-100, 100);
+		Rx = findRangeX();
+        Ry = findRangeY();
+        StdDraw.setXscale(Rx.get_min()-50,Rx.get_max()+50);
+        StdDraw.setYscale(Ry.get_min()-50,Ry.get_max()+50);
 
-		// public drawGraph() {
 		if (this.g != null) {
 			for (node_data n : this.g.getV()) {
 				StdDraw.setPenColor(Color.BLUE);
@@ -90,16 +96,16 @@ public class Graph_GUI implements Runnable {
 		initGUI();
 		return this.ga.isConnected();
 	}
-	
+
 	public List<node_data> drawTSP(List<Integer> targets) {
-		initGUI();
+
 		List<node_data> list = this.ga.TSP(targets);
-		
+
 		for (int i = 0; i < list.size() - 1; i++) {
 
 			StdDraw.setPenColor(Color.CYAN);
-			StdDraw.line(list.get(i).getLocation().x(), list.get(i).getLocation().y(), list.get(i + 1).getLocation().x(),
-					list.get(i + 1).getLocation().y());
+			StdDraw.line(list.get(i).getLocation().x(), list.get(i).getLocation().y(),
+					list.get(i + 1).getLocation().x(), list.get(i + 1).getLocation().y());
 		}
 
 		return list;
@@ -110,13 +116,54 @@ public class Graph_GUI implements Runnable {
 			while (true) {
 				if (this.count != this.g.getMC()) {
 					initGUI();
+					
 					this.count = this.g.getMC();
-
 				}
 			}
 		} catch (Exception e) {
 		}
 
 	}
+	
+	  public Range findRangeX(){
+	        if(g.nodeSize()!=0) {
+	            double min = Integer.MAX_VALUE;
+	            double max = Integer.MIN_VALUE;
+	            Collection<node_data> V = g.getV();
+	            for (node_data node : V) {
+	                if (node.getLocation().x() > max) 
+	                	max = node.getLocation().x();
+	                if (node.getLocation().x() < min) 
+	                	min = node.getLocation().x();
+	            }
+	            Range ans = new Range(min, max);
+	            Rx = ans;
+	            return ans;
+	        }
+	        else{
+	            Range Default = new Range(-100,100);
+	            Rx=Default;
+	            return Default;
+	        }
+	    }
+	    public Range findRangeY(){
+	        if(g.nodeSize()!=0) {
+	            double min = Integer.MAX_VALUE;
+	            double max = Integer.MIN_VALUE;
+	            Collection<node_data> V = g.getV();
+	            for (node_data node : V) {
+	                if (node.getLocation().y() > max)
+	                	max = node.getLocation().y();
+	                if (node.getLocation().y() < min) 
+	                	min = node.getLocation().y();
+	            }
+	            Range ans = new Range(min, max);
+	            Ry = ans;
+	            return ans;
+	        }
+	        else{
+	            return new Range(-100,100);
+	        }
+	    }
 
 }
