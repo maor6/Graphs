@@ -2,6 +2,7 @@ package Tests;
 
 import static org.junit.jupiter.api.Assertions.*;
 
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -62,6 +63,19 @@ class DgraphTest {
 		assertEquals(expected.getWeight(), actual.getWeight());
 	}
 	
+	@Test
+	void addNodeExceptionTest() {
+	 Assertions.assertThrows(RuntimeException.class, () -> {
+		 g.addNode(new Node(0, new Point3D(10, 20))); //invalid - this key already exist
+		  }); 
+	}
+	
+	@Test
+	void connectExceptionTest() {
+		Assertions.assertThrows(RuntimeException.class, () -> {
+			 g.connect(8, 10, 20); //invalid - missing nodes
+			  }); 
+	}
 	
 	@Test
 	void RemoveNodeTest() {
@@ -89,15 +103,7 @@ class DgraphTest {
 		assertEquals(expected, actual);
 	}
 	
-	@Test 
-	void getMcTest() {
-		int actual = g.getMC();
-		System.out.println(actual);
-		int expected = 16;
-		assertEquals(expected, actual);
-	}
-	
-	
+
 	@Test
 	void testgraph() {
 		boolean ans = drawGraph(g);

@@ -60,8 +60,8 @@ public class DGraph implements graph, Serializable {
 
 	/**
 	 * add a new node to the graph with the given node_data. this method run in O(1)
-	 * time.
-	 * if the key is already exist, should throw exception and not replace the previous one.
+	 * time. if the key is already exist, should throw exception and not replace the
+	 * previous one.
 	 * 
 	 * @param n the node to add
 	 */
@@ -71,11 +71,10 @@ public class DGraph implements graph, Serializable {
 				this.nodes.put(n.getKey(), n);
 				MC++;
 			} else {
-				throw new RuntimeException(); // if the node already exist, should throw exception and not replace
+				throw new RuntimeException("this key ia already used"); // if the node already exist, should throw exception and not replace
 												// previous one.
 			}
 		} catch (Exception e) {
-			e.printStackTrace();
 			throw new RuntimeException("this key ia already used");
 		}
 	}
@@ -90,15 +89,21 @@ public class DGraph implements graph, Serializable {
 	 *             between src-->dest.
 	 */
 	public void connect(int src, int dest, double w) {
-		if (this.nodes.get(src) != null && this.nodes.get(dest) != null) { // if one or more of the nodes doesn't exist-
-																			// don't do anything.
-
-			Edge e = new Edge(src, dest, w);
-			if (this.edges.get(src) == null) { // add a new hash if there is no any edge from this key yet
-				this.edges.put(src, new HashMap<Integer, edge_data>()); // the key is the source key
+		try {
+			if (this.nodes.get(src) != null && this.nodes.get(dest) != null) { // if one or more of the nodes doesn't
+																				// exist-
+																				// don't do anything.
+				Edge e = new Edge(src, dest, w);
+				if (this.edges.get(src) == null) { // add a new hash if there is no any edge from this key yet
+					this.edges.put(src, new HashMap<Integer, edge_data>()); // the key is the source key
+				}
+				this.edges.get(src).put(dest, e); // add the edge to the hash by key (the key is destination key)
+				MC++;
+			} else {
+				throw new RuntimeException("1 or 2 of the nodes doesnt't exist");
 			}
-			this.edges.get(src).put(dest, e); // add the edge to the hash by key (the key is destination key)
-			MC++;
+		} catch (RuntimeException e) {
+			throw new RuntimeException("1 or 2 of the nodes doesnt't exist");
 		}
 	}
 
@@ -151,7 +156,6 @@ public class DGraph implements graph, Serializable {
 			return removed;
 		}
 		return null;
-
 	}
 
 	/**
