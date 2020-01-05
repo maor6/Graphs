@@ -28,7 +28,7 @@ directional edge(src,dest) in a directional weighted graph.
 Graph_Algo class that implements the interface "graph_algorithms" and consist of "regular" Graph Theory algorithms including:
 1. save graph.
 2. load graph.
-3. chack if the graph is strong connected.
+3. chack if the graph is strongly connected.
 4. find the shortest path between 2 nodes and the cost of it.
 5. find the relatively short path which visit each node in a targets List.
 
