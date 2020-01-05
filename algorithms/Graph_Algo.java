@@ -246,6 +246,8 @@ public class Graph_Algo implements graph_algorithms, Serializable {
 
 	/**
 	 * computes a relatively short path which visit each node in the targets List.
+	 * The function find a path just if the graph connected or the sub graph(=the targets list) connected.
+	 * any different case - will return null. to short the run time.
 	 * 
 	 * @param targets- the list to visit
 	 * @return the list of the node we pass and visit to visit all the nodes in the
